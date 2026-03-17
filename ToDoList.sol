@@ -49,7 +49,37 @@ task.completedAt = block.timestamp;
 emit TaskCompleted(_id);
 }
 
+function getMyTasks() public view returns (Task[] memory) {
+        uint count = 0;
 
+        // Først: tell hvor mange tasks som skal vises
+        for (uint i = 0; i < tasks.length; i++) {
+            if (
+                !tasks[i].isPrivate || 
+                tasks[i].user == msg.sender
+            ) {
+                count++;
+            }
+        }
 
+// Lager array med riktig størrelse
+    Task[] memory result = new Task[](count);
+    uint index = 0;
 
+    // Fyll arrayet
+    for (uint i = 0; i < tasks.length; i++) {
+        if (!tasks[i].isPrivate ||
+        tasks[i].user == msg.sender)
+        {
+            result[index] = tasks[i];
+            index++;
+        }
+    }
+return result;
+}
+
+function getTaskById(uint _id) public view returns (Task memory) {
+    require(_id < tasks.length, "Task does not exist");
+    return tasks[_id];
+}
 }
