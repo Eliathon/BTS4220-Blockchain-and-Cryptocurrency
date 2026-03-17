@@ -16,9 +16,15 @@
 					},
 					{
 						"indexed": false,
-						"internalType": "string",
-						"name": "content",
-						"type": "string"
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "isPrivate",
+						"type": "bool"
 					}
 				],
 				"name": "TaskAdded",
@@ -32,12 +38,6 @@
 						"internalType": "uint256",
 						"name": "id",
 						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "bool",
-						"name": "completed",
-						"type": "bool"
 					}
 				],
 				"name": "TaskCompleted",
@@ -47,8 +47,13 @@
 				"inputs": [
 					{
 						"internalType": "string",
-						"name": "_content",
+						"name": "_description",
 						"type": "string"
+					},
+					{
+						"internalType": "bool",
+						"name": "_isPrivate",
+						"type": "bool"
 					}
 				],
 				"name": "addTask",
@@ -68,36 +73,6 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "getTasks",
-				"outputs": [
-					{
-						"components": [
-							{
-								"internalType": "uint256",
-								"name": "id",
-								"type": "uint256"
-							},
-							{
-								"internalType": "string",
-								"name": "content",
-								"type": "string"
-							},
-							{
-								"internalType": "bool",
-								"name": "completed",
-								"type": "bool"
-							}
-						],
-						"internalType": "struct TodoList.Task[]",
-						"name": "",
-						"type": "tuple[]"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -113,7 +88,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"ToDoList.sol": "TodoList"
+			"ToDoList.sol": "ToDoList"
 		},
 		"evmVersion": "osaka",
 		"libraries": {},
@@ -128,11 +103,11 @@
 	},
 	"sources": {
 		"ToDoList.sol": {
-			"keccak256": "0x296786e8b4e2575b43a2f30e273baa9aece7c010f5b2dddf9088c1d58eb04a3c",
+			"keccak256": "0xdc4f5202c9ee4e1520bf63c9becccf24948d1f6be6b1c5d9b020cd4f499677ad",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://c0ba7f2d7f1874349df3152f570d8e70718edfb4ff14cfe95e77b457ab9273cb",
-				"dweb:/ipfs/QmQ9LcyoxRi1p5Q5ZCMsASgchDQLcuGcQTDb6LKtapAAk6"
+				"bzz-raw://7685bf7f81723da4966778771c82b967d25d7502b3b00abc3864818063b8ddfd",
+				"dweb:/ipfs/QmSnhMJmb2oMiGXEbxhS1ZzbxbVYv8wGvnmCRu4BAULLce"
 			]
 		}
 	},

@@ -91,7 +91,7 @@
 								"type": "bool"
 							}
 						],
-						"internalType": "struct TodoList.Task[]",
+						"internalType": "struct TodoListBasicTest.Task[]",
 						"name": "",
 						"type": "tuple[]"
 					}
@@ -113,7 +113,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"ToDoList.sol": "TodoList"
+			"ToDoListBasicTest.sol": "TodoListBasicTest"
 		},
 		"evmVersion": "osaka",
 		"libraries": {},
@@ -127,12 +127,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"ToDoList.sol": {
-			"keccak256": "0x296786e8b4e2575b43a2f30e273baa9aece7c010f5b2dddf9088c1d58eb04a3c",
+		"ToDoListBasicTest.sol": {
+			"keccak256": "0x311680eddfc879e1c84d24567483e28380865bb3b5969e818032fd60fc28f58e",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://c0ba7f2d7f1874349df3152f570d8e70718edfb4ff14cfe95e77b457ab9273cb",
-				"dweb:/ipfs/QmQ9LcyoxRi1p5Q5ZCMsASgchDQLcuGcQTDb6LKtapAAk6"
+				"bzz-raw://a6e05e14d3cfb13d602e46990a535b07bf2597264d9201f8e7c8be7a89dc1608",
+				"dweb:/ipfs/QmT6FC2yLR7xo43nZHPhAJB62TQ3xRmehGbU6GdtaQWFfQ"
 			]
 		}
 	},
