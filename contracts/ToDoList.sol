@@ -1,85 +1,97 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-
+// Smart contract for  managing a decentralized To-Do list
 contract ToDoList {
 
+// Struct representing a task
     struct Task {
-        uint id;
-        string description;
-        uint createdAt;
-        uint completedAt;
-        address user;
-        bool isPrivate;
-        bool completed;
+        uint id;    //Unique identifier for task
+        string description;     // Task description 
+        uint createdAt;     // Timestamp when task was created
+        uint completedAt;   //Timestamp when task was completed
+        address user;       //Address of the task owner
+        bool isPrivate;     // Whether the task is private or public
+        bool completed;     // Is the task completed?
     } 
 
-Task[] private tasks;
-uint private nextId = 0;
+  uint public taskCount; // Counter to keep track of total tasks
 
-event TaskAdded(uint id, address user, bool isPrivate);
-event TaskCompleted(uint id);
+    // Mapping that stores all tasks by ID
+    mapping(uint => Task) public tasks;
 
-function addTask(string memory _description, bool _isPrivate) public {
-    require(bytes(_description).length > 0, "Description must not be empty");
+    // Event emitted when a new task is created
+    event TaskCreated(uint id, string description, address user, bool isPrivate);
 
-    tasks.push(Task({
-        id: nextId,
-        description: _description,
-        createdAt: block.timestamp,
-        completedAt: 0,
-        user: msg.sender,
-        isPrivate: _isPrivate,
-        completed: false
-            }));
-emit TaskAdded(nextId, msg.sender, _isPrivate);
-nextId++;
-}
+    // Event emitted when a task is marked as completed
+    event TaskCompleted(uint id, uint completedAt);
 
-function completeTask(uint _id) public {
-    require(_id < tasks.length, "Task does not exist");
-    Task storage task = tasks [_id];
+    // Function to create a new task
+    function addTask(string memory _description, bool _isPrivate) public {
+        taskCount++; // Increment task counter
 
-require(task.user == msg.sender, "Not your task");
-require(!task.completed, "Already completed");
+        // Store the new task in the mapping
+        tasks[taskCount] = Task(
+            taskCount,
+            _description,
+            block.timestamp, // Current blockchain timestamp
+            0,               // Not completed yet
+            msg.sender,      // Address of the creator
+            _isPrivate,
+            false            // Initially not completed
+        );
 
-task.completed = true;
-task.completedAt = block.timestamp;
+        // Emit event so frontend can detect the change
+        emit TaskCreated(taskCount, _description, msg.sender, _isPrivate);
+    }
 
-emit TaskCompleted(_id);
-}
+    // Function to mark a task as completed
+    function completeTask(uint _id) public {
+        Task storage task = tasks[_id];
 
-function getMyTasks() public view returns (Task[] memory) {
+        // Ensure that only the owner can complete the task
+        require(task.user == msg.sender, "Not your task");
+
+        // Ensure the task is not already completed
+        require(!task.completed, "Task already completed");
+
+        task.completed = true;
+        task.completedAt = block.timestamp;
+
+        // Emit event after completion
+        emit TaskCompleted(_id, block.timestamp);
+    }
+
+    // Function to retrieve tasks that the user is allowed to see
+    function getMyTasks() public view returns (Task[] memory) {
         uint count = 0;
 
-        // Først: tell hvor mange tasks som skal vises
-        for (uint i = 0; i < tasks.length; i++) {
+        // First loop: count how many tasks are visible to the user
+        for (uint i = 1; i <= taskCount; i++) {
             if (
-                !tasks[i].isPrivate || 
-                tasks[i].user == msg.sender
+                tasks[i].user == msg.sender || // User owns the task
+                !tasks[i].isPrivate           // Task is public
             ) {
                 count++;
             }
         }
 
-// Lager array med riktig størrelse
-    Task[] memory result = new Task[](count);
-    uint index = 0;
+        // Create array with correct size
+        Task[] memory result = new Task[](count);
 
-    // Fyll arrayet
-    for (uint i = 0; i < tasks.length; i++) {
-        if (!tasks[i].isPrivate ||
-        tasks[i].user == msg.sender)
-        {
-            result[index] = tasks[i];
-            index++;
+        uint index = 0;
+
+        // Second loop: populate the array with visible tasks
+        for (uint i = 1; i <= taskCount; i++) {
+            if (
+                tasks[i].user == msg.sender ||
+                !tasks[i].isPrivate
+            ) {
+                result[index] = tasks[i];
+                index++;
+            }
         }
-    }
-return result;
-}
 
-function getTaskById(uint _id) public view returns (Task memory) {
-    require(_id < tasks.length, "Task does not exist");
-    return tasks[_id];
-}
+        return result;
+    }
 }

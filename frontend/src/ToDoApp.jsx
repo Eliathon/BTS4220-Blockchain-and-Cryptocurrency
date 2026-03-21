@@ -2,14 +2,17 @@ import { useEffect, useState } from "react";
 import { BrowserProvider, Contract } from "ethers";
 import TodoListABI from "../TodoListABI.json";
 
+// Smart contract address deployed on the blockchain
 const CONTRACT_ADDRESS = "0x9cA516eCb4bFE2f96d058bD6F88023060205208d";
 
+// Converts Unix timestamp values from the smart contract into readable date/time
 function formatTimestamp(ts) {
   const num = Number(ts);
   if (!num) return "Ikke fullført";
   return new Date(num * 1000).toLocaleString();
 }
 
+// Converts raw task objects from the smart contract into simple JavaScript values
 function normalizeTasks(raw) {
   return raw.map((t) => ({
     id: Number(t.id),
@@ -23,13 +26,26 @@ function normalizeTasks(raw) {
 }
 
 export default function TodoApp() {
+  // Stores the connected MetaMask account address
   const [account, setAccount] = useState("");
+
+  // Stores the initialized smart contract instance
   const [contract, setContract] = useState(null);
+
+  // Stores the user's task list fetched from the blockchain
   const [tasks, setTasks] = useState([]);
+
+  // Stores the text input for a new task
   const [description, setDescription] = useState("");
+
+  // Stores whether the new task should be private or not
   const [isPrivate, setIsPrivate] = useState(false);
+
+  // Stores status and error messages shown in the UI
   const [status, setStatus] = useState("");
 
+  // Connects the app to MetaMask, creates the contract instance,
+  // and loads the user's tasks from the blockchain
   const connect = async () => {
     try {
       setStatus("");
@@ -58,6 +74,7 @@ export default function TodoApp() {
     }
   };
 
+  // Reloads the current user's tasks from the smart contract
   const loadTasks = async (activeContract = contract) => {
     try {
       if (!activeContract) return;
@@ -68,6 +85,8 @@ export default function TodoApp() {
     }
   };
 
+  // Sends a transaction to the smart contract to create a new task,
+  // then refreshes the task list after the transaction is confirmed
   const addTask = async () => {
     try {
       setStatus("");
@@ -97,6 +116,8 @@ export default function TodoApp() {
     }
   };
 
+  // Sends a transaction to mark a task as completed,
+  // then refreshes the task list after confirmation
   const completeTask = async (taskId) => {
     try {
       setStatus("");
@@ -117,6 +138,8 @@ export default function TodoApp() {
     }
   };
 
+  // Adds MetaMask event listeners so the app responds when the user
+  // changes account or switches blockchain network
   useEffect(() => {
     if (window.ethereum) {
       window.ethereum.on("accountsChanged", connect);
@@ -134,16 +157,19 @@ export default function TodoApp() {
     <div style={{ maxWidth: "900px", margin: "40px auto", fontFamily: "Arial, sans-serif" }}>
       <h1>To-Do dApp</h1>
 
+      {/* Button used to connect the application to MetaMask */}
       <button onClick={connect} style={{ marginBottom: "20px", padding: "10px 16px" }}>
         Koble til MetaMask
       </button>
 
+      {/* Shows the currently connected wallet address */}
       {account && (
         <p>
           <strong>Innlogget konto:</strong> {account}
         </p>
       )}
 
+      {/* Section for creating a new task */}
       <div style={{ marginBottom: "24px", padding: "16px", border: "1px solid #ccc", borderRadius: "8px" }}>
         <h2>Legg til oppgave</h2>
 
@@ -155,6 +181,7 @@ export default function TodoApp() {
           style={{ width: "100%", padding: "10px", marginBottom: "12px" }}
         />
 
+        {/* Checkbox that decides whether the new task is private */}
         <label style={{ display: "block", marginBottom: "12px" }}>
           <input
             type="checkbox"
@@ -170,6 +197,7 @@ export default function TodoApp() {
         </button>
       </div>
 
+      {/* Section that displays tasks retrieved from the blockchain */}
       <div style={{ marginBottom: "24px" }}>
         <h2>Mine synlige oppgaver</h2>
         <button onClick={() => loadTasks()} style={{ marginBottom: "16px", padding: "8px 14px" }}>
@@ -197,6 +225,7 @@ export default function TodoApp() {
               <p><strong>Bruker:</strong> {task.user}</p>
               <p><strong>Privat:</strong> {task.isPrivate ? "Ja" : "Nei"}</p>
 
+              {/* Only the owner of an unfinished task can mark it as completed */}
               {!task.completed && task.user.toLowerCase() === account.toLowerCase() && (
                 <button onClick={() => completeTask(task.id)} style={{ padding: "8px 12px" }}>
                   Fullfør oppgave
@@ -207,6 +236,7 @@ export default function TodoApp() {
         )}
       </div>
 
+      {/* Displays feedback messages such as success, loading, or error status */}
       {status && (
         <div style={{ padding: "12px", background: "#f3f3f3", borderRadius: "8px" }}>
           {status}
