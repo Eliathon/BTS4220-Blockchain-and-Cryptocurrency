@@ -15,6 +15,17 @@ Before running the project, make sure you have: - Node.js installed
 test network (e.g., Sepolia)
 
 
+IMPORTANT before running:
+
+Before running the application, you must configure the correct smart contract address in the frontend.
+
+Open frontend/src/ToDoApp.jsx.
+
+You must update the const CONTRACT_ADDRESS with your depoyed smart contract, which is found in Remix after depl
+Compile and deploy the ToDoList.sol contract, using Sepolia test network.
+Then you can copy the Deployed Contracts ADDRESS into ToDoApp.jsx. 
+This is how the program knows which contract to use for the application.
+
 
 Setup and Run the Application
 
